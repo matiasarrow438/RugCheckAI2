@@ -1,0 +1,158 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.site-background {
+    background: 
+        linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+        linear-gradient(#f0f9ff 21px, transparent 1%) center,
+        #f8fafc;
+    background-size: 22px 22px;
+    position: relative;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+.site-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 50% 0%, #93c5fd30 0%, transparent 70%),
+        radial-gradient(circle at 0% 50%, #bfdbfe30 0%, transparent 70%),
+        radial-gradient(circle at 100% 50%, #93c5fd30 0%, transparent 70%),
+        radial-gradient(circle at 50% 100%, #bfdbfe30 0%, transparent 70%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.site-background:hover::before {
+    opacity: 1;
+}
+
+.site-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #3b82f630, #2563eb30);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.site-background:hover::after {
+    opacity: 1;
+}
+
+.main-content {
+    background: 
+        linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+        linear-gradient(#f0f9ff 21px, transparent 1%) center,
+        #f8fafc;
+    background-size: 22px 22px;
+    position: relative;
+    border: 1px solid #e2e8f0;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.main-content:hover {
+    box-shadow: rgba(17, 12, 46, 0.25) 0px 48px 100px 0px;
+    background: 
+        linear-gradient(90deg, #ffffff 21px, transparent 1%) center,
+        linear-gradient(#ffffff 21px, transparent 1%) center,
+        #ffffff;
+    background-size: 22px 22px;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+.token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.token-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.token-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    background: linear-gradient(to right, #3b82f6, #2563eb);
+    color: white;
+}
+
+.token-card:hover h3,
+.token-card:hover p,
+.token-card:hover span {
+    color: white !important;
+}
+
+.highlight {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+@media (max-width: 640px) {
+    .token-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Add this for the moving highlight effect */
+body:hover .highlight {
+    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+}
+
+.main-content {
+    background: 
+        linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+        linear-gradient(#f0f9ff 21px, transparent 1%) center,
+        #f8fafc;
+    background-size: 22px 22px;
+    position: relative;
+    border: 1px solid #e2e8f0;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.main-content:hover {
+    box-shadow: rgba(17, 12, 46, 0.25) 0px 48px 100px 0px;
+    background: 
+        linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+        linear-gradient(#f0f9ff 21px, transparent 1%) center,
+        linear-gradient(to right, #3b82f610, #2563eb10);
+    background-size: 22px 22px;
+}

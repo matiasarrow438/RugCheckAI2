@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RugCheckAI - Smart Token Analysis & Safety Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Main background style that will be used for both body and header */
+        .site-background {
+            background: 
+                linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+                linear-gradient(#f0f9ff 21px, transparent 1%) center,
+                #f8fafc;
+            background-size: 22px 22px;
+            position: relative;
+        }
+
+        .site-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 50% 0%, #93c5fd30 0%, transparent 70%),
+                radial-gradient(circle at 0% 50%, #bfdbfe30 0%, transparent 70%),
+                radial-gradient(circle at 100% 50%, #93c5fd30 0%, transparent 70%),
+                radial-gradient(circle at 50% 100%, #bfdbfe30 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .site-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, #60a5fa10 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #3b82f610 0%, transparent 50%);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        /* Header specific styles */
+        .header-container {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes expand {
+            0% {
+                width: 120px; /* Increased initial width */
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        @keyframes moveIcon {
+            0% {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                top: 50%;
+                left: 15px;
+                transform: translateY(-50%);
+            }
+        }
+
+        @keyframes fadeOutText {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                display: none;
+            }
+        }
+
+        .search-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 2xl;
+        }
+
+        .search-icon-group {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            pointer-events: none;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px; /* Increased gap */
+        }
+
+        .search-text {
+            color: rgb(79 70 229); /* Exact indigo-600 color to match button */
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .search-input {
+            width: 120px; /* Increased initial width */
+            height: 55px; /* Increased height */
+            padding: 12px;
+            border-radius: 28px; /* Increased border radius */
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            font-size: 1.125rem;
+        }
+
+        .search-input:focus {
+            width: 100%;
+            padding-left: 45px; /* Reduced padding since text will disappear */
+            outline: none;
+            border-color: rgb(79 70 229); /* Updated border color to match */
+            animation: expand 0.3s ease forwards;
+        }
+
+        .search-input:focus ~ .search-icon-group {
+            animation: moveIcon 0.3s ease forwards;
+        }
+
+        .search-input:focus ~ .search-icon-group .search-text {
+            animation: fadeOutText 0.2s ease forwards;
+        }
+
+        .search-input::placeholder {
+            color: transparent;
+        }
+
+        .search-input:focus::placeholder {
+            color: #9CA3AF;
+        }
+
+        /* Update the main content area styling with hover animation */
+        .main-content {
+            background: 
+                linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+                linear-gradient(#f0f9ff 21px, transparent 1%) center,
+                #f8fafc;
+            background-size: 22px 22px;
+            position: relative;
+            border: 1px solid #e2e8f0;
+            box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+        }
+
+        /* Animated gradient overlay */
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 50% 50%, 
+                    rgba(147, 197, 253, 0.1) 0%,
+                    transparent 50%);
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
+            transform: scale(0.5);
+            pointer-events: none;
+        }
+
+        /* Hover effects */
+        .main-content:hover {
+            transform: translateY(-5px);
+            box-shadow: rgba(17, 12, 46, 0.25) 0px 48px 100px 0px;
+        }
+
+        .main-content:hover::before {
+            opacity: 1;
+            transform: scale(1) rotate(180deg);
+        }
+
+        /* Animated background pattern */
+        @keyframes patternShift {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 22px 22px;
+            }
+        }
+
+        .main-content:hover {
+            animation: patternShift 3s linear infinite;
+        }
+
+        /* Ensure content stays above background effects */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Update any white backgrounds to use the pattern */
+        .bg-white {
+            background: transparent !important;
+        }
+
+        /* Background behind key features */
+        .features-background {
+            background: linear-gradient(
+                135deg,
+                rgba(147, 197, 253, 0.1) 0%,
+                rgba(186, 230, 253, 0.1) 50%,
+                rgba(147, 197, 253, 0.1) 100%
+            );
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .features-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(96, 165, 250, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Keep existing key-features styles but adjust shadow */
+        .key-features {
+            background: 
+                linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+                linear-gradient(#f0f9ff 21px, transparent 1%) center,
+                #f8fafc;
+            background-size: 22px 22px;
+            position: relative;
+            border: 1px solid #e2e8f0;
+            box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+        }
+
+        /* Update the features section background */
+        #features {
+            background: 
+                linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+                linear-gradient(#f0f9ff 21px, transparent 1%) center,
+                #f8fafc;
+            background-size: 22px 22px;
+            position: relative;
+        }
+
+        #features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 50% 0%, #93c5fd30 0%, transparent 70%),
+                radial-gradient(circle at 0% 50%, #bfdbfe30 0%, transparent 70%),
+                radial-gradient(circle at 100% 50%, #93c5fd30 0%, transparent 70%),
+                radial-gradient(circle at 50% 100%, #bfdbfe30 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        #features::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, #60a5fa10 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #3b82f610 0%, transparent 50%);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f8fafc;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Interactive background with enhanced visibility */
+        .interactive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, #f0f9ff 21px, transparent 1%) center,
+                linear-gradient(#f0f9ff 21px, transparent 1%) center,
+                #f8fafc;
+            background-size: 22px 22px;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 1000px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(147, 197, 253, 0.4),
+                rgba(186, 230, 253, 0.2),
+                transparent 100%
+            );
+            transition: opacity 0.3s ease;
+        }
+
+        .interactive-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 600px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(96, 165, 250, 0.3),
+                transparent 100%
+            );
+            transition: opacity 0.3s ease;
+            mix-blend-mode: multiply;
+        }
+
+        /* Additional highlight effect */
+        .interactive-bg .highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.2),
+                transparent 100%
+            );
+            transition: opacity 0.2s ease;
+        }
+
+        /* Ensure content stays above background */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="site-background">
+    <div class="interactive-bg">
+        <div class="highlight"></div>
+    </div>
+    <div class="content-wrapper">
+        <!-- Navigation Bar -->
+        <nav class="bg-[#1e293b] p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="home.html" class="text-black text-xl font-bold">RugCheckAI</a>
+                <div class="flex space-x-4">
+                    <a href="home.html" class="text-black hover:text-gray-700">Home</a>
+                    <a href="trendingpage.html" class="text-black hover:text-gray-700">Trending</a>
+                    <a href="https://x.com/RugCheck_AI" target="_blank" class="text-black hover:text-gray-700">
+                        Twitter
+                        <svg class="inline-block ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section with Added Buttons -->
+        <div class="relative bg-white overflow-hidden">
+            <div class="max-w-7xl mx-auto">
+                <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
+                    <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+                        <div class="text-center">
+                            <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                                <span class="block">Secure Your</span>
+                                <span class="block text-indigo-600">Crypto Investments</span>
+                            </h1>
+                            <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl">
+                                Advanced AI-powered platform that detects bundle wallets, analyzes token safety, and tracks trending cryptocurrencies in real-time.
+                            </p>
+                            
+                            <!-- Reorganized Search Bar and Trending Button -->
+                            <div class="mt-8 flex flex-col items-center space-y-4">
+                                <div class="search-container w-full max-w-2xl">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Enter contract address..." 
+                                        class="search-input text-lg"
+                                    >
+                                    <div class="search-icon-group">
+                                        <span class="search-icon">🔍</span>
+                                        <span class="search-text">Search</span>
+                                    </div>
+                                </div>
+                                
+                                <a href="trendingpage.html" 
+                                   onclick="window.location.href='trendingpage.html'" 
+                                   class="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
+                                    📈 View Trending
+                                </a>
+
+                                <!-- Added Official CA text -->
+                                <div class="text-gray-600 text-lg font-medium mt-2">
+                                    Official CA: Coming Soon
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div id="features" class="py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900">Key Features</h2>
+                </div>
+
+                <div class="mt-10">
+                    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                        <!-- Bundle Detection -->
+                        <div class="bg-white rounded-lg shadow-lg p-6">
+                            <div class="text-xl font-semibold mb-4">Bundle Wallet Detection</div>
+                            <p class="text-gray-600">
+                                Advanced algorithms to identify and track bundle wallets, helping you avoid potential rug pulls and scams.
+                            </p>
+                        </div>
+
+                        <!-- Token Analysis -->
+                        <div class="bg-white rounded-lg shadow-lg p-6">
+                            <div class="text-xl font-semibold mb-4">Smart Token Analysis</div>
+                            <p class="text-gray-600">
+                                Comprehensive token safety analysis including liquidity checks, contract verification, and holder distribution.
+                            </p>
+                        </div>
+
+                        <!-- Trending Tokens -->
+                        <div class="bg-white rounded-lg shadow-lg p-6">
+                            <div class="text-xl font-semibold mb-4">Real-time Trending</div>
+                            <p class="text-gray-600">
+                                Stay updated with the latest trending tokens, complete with detailed analytics and safety scores.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="py-12 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-12">How It Works</h2>
+                
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                    <div class="text-center">
+                        <div class="text-lg font-semibold mb-2">1. Input Token</div>
+                        <p class="text-gray-600">Enter the token address you want to analyze</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-lg font-semibold mb-2">2. AI Analysis</div>
+                        <p class="text-gray-600">Our AI scans for bundle wallets and potential risks</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-lg font-semibold mb-2">3. Get Results</div>
+                        <p class="text-gray-600">Receive detailed safety analysis and recommendations</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-lg font-semibold mb-2">4. Make Decisions</div>
+                        <p class="text-gray-600">Make informed investment decisions based on data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-white">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8"    >
+                <div class="grid grid-cols-2 gap-5 max-w-xs mx-auto">
+                    <!-- Quick Links Section -->
+                    <div class="text-center">
+                        <h3 class="text-base font-semibold text-gray-900">Quick Links</h3>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <a href="home.html" class="text-base text-gray-500 hover:text-gray-900">
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <a href="trendingpage.html" class="text-base text-gray-500 hover:text-gray-900">
+                                    Trending
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Connect With Us Section -->
+                    <div class="text-center">
+                        <h3 class="text-base font-semibold text-gray-900">Connect With Us</h3>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <a href="https://x.com/RugCheck_AI" 
+                                   target="_blank" 
+                                   class="text-base text-gray-500 hover:text-gray-900 inline-flex items-center gap-2 justify-center">
+                                    <span>𝕏</span> Twitter
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bg = document.querySelector('.interactive-bg');
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!bg) return;
+                
+                // Get mouse position relative to viewport
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                // Update CSS variables with slight delay for smooth effect
+                requestAnimationFrame(() => {
+                    bg.style.setProperty('--mouse-x', `${mouseX}px`);
+                    bg.style.setProperty('--mouse-y', `${mouseY}px`);
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            const popup = document.getElementById('searchPopup');
+            const overlay = document.getElementById('overlay');
+            const resultsDiv = document.getElementById('searchResults');
+            
+            // Clear input on blur (when clicking away)
+            searchInput.addEventListener('blur', function() {
+                searchInput.value = '';
+            });
+            
+            searchInput.addEventListener('keypress', async function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = searchInput.value.trim();
+                    
+                    // Check if the input is exactly 44 characters
+                    if (searchTerm.length !== 44) {
+                        resultsDiv.innerHTML = '<p class="text-center text-red-500 text-lg font-medium">Not valid CA</p>';
+                        popup.style.display = 'block';
+                        overlay.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (searchTerm) {
+                        try {
+                            // Redirect to DexScreener with the contract address
+                            window.open(`https://dexscreener.com/solana/${searchTerm}`, '_blank');
+                            // Clear the input after search
+                            searchInput.value = '';
+                        } catch (error) {
+                            // Handle any potential errors
+                            console.error('Error searching:', error);
+                        }
+                    }
+                }
+            });
+        });
+
+        function closePopup() {
+            document.getElementById('searchPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Close popup when clicking overlay
+        document.getElementById('overlay').addEventListener('click', closePopup);
+    </script>
+</body>
+</html>

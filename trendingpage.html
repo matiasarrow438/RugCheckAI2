@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Tokens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0f1c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        .radar {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            background: transparent;
+            border: 8px solid #1e293b;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        .radar::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #3b82f6;
+            animation: scan 2s linear infinite;
+            transform-origin: 50% 50%;
+            mix-blend-mode: screen;
+        }
+
+        .radar::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background: #3b82f6;
+            transform-origin: left center;
+            animation: rotate 2s linear infinite;
+            left: 50%;
+            box-shadow: 0 0 10px #3b82f6;
+        }
+
+        @keyframes scan {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: #3b82f6;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0.8;
+            animation: pulse 1.5s ease-in-out infinite;
+            width: 100%;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#0a0f1c]">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-container">
+            <div class="radar"></div>
+            <div class="loading-text">Scanning tokens...</div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-[#1e293b] p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="home.html" class="text-white text-xl font-bold">RugCheckAI</a>
+            <div class="flex space-x-4">
+                <a href="home.html" class="text-white hover:text-gray-300">Home</a>
+                <a href="https://x.com/RugCheck_AI" target="_blank" class="text-white hover:text-gray-300">
+                    Twitter
+                    <svg class="inline-block ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-white text-center mb-8">Trending Tokens</h1>
+        
+        <!-- Token Grid -->
+        <div class="token-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Tokens will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination mt-8">
+            <!-- Pagination will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+   
+
+        <div class="container mx-auto text-center">
+          
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            // Hide loading screen when content is loaded
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loadingScreen.classList.add('fade-out');
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }, 2000); // Show loading screen for at least 2 seconds
+            });
+        });
+    </script>
+    <script src="trending.js"></script>
+</body>
+</html>
